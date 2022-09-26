@@ -1,6 +1,4 @@
-drop database bdd;
-create database bdd;
-use bdd;
+use estudante;
 
 /* Alunos participantes do projeto:
 Beatriz Rossi Duarte;
@@ -438,20 +436,62 @@ insert into Adocao values
 (19, 19, 37, '2022-07-12 16:10:59'),
 (20, 20, 39, '2022-07-13 16:10:59');
 
-select e.nome, r.nome
+
+create view animal_registrado as
+select e.nome as Especie, r.nome as Raca
 from Especie e
 left join Raca r
 on e.id = r.id_Especie;
 
+---------------------------------------------------------------------------------
 
-select u.nome, m.texto, m.data_hora, m.imagem
+create view chat as
+select u.nome, m.texto, m.data_hora, m.imagem, m.enviado_por, m.enviado_para
 from Usuario u
 left join Mensagem m on m.enviado_por = u.id
-where m.enviado_por = 1 and m.enviado_para = 2
 
 union
 
-select u.nome, m.texto, m.data_hora, m.imagem
+select u.nome, m.texto, m.data_hora, m.imagem, m.enviado_por, m.enviado_para
 from Usuario u
-left join Mensagem m on m.enviado_por = u.id
-where m.enviado_por = 2 and m.enviado_para = 1 order by data_hora;
+left join Mensagem m on m.enviado_por = u.id;
+
+-------------------------------------------------------------------------------------------------------
+
+create view adocao as
+select u.nome as Adotante, p.id_Usuario as Doador, r.nome as Raca, a.data_hora as Data
+from Adocao a
+inner join Usuario u on a.id_Usuario = u.id
+inner Join Pets p on a.id_Pets = p.id
+inner join Raca r on p.id_Raca = r.id;
+
+/*Complemento do join acima, ja que não consegui colocar dois nomes de usuario diferentes(Depois verei como resolver esse "problema")*/
+
+create view doador as
+select u.nome as Doador
+from Pets p
+Inner join Usuario u on p.id_Usuario = u.id
+inner join Adocao a on a.id_Pets = p.id;
+
+------------------------------------------------------------------------------------------------------------
+
+create view anuncio as
+select u.nome as Doador, p.id as Pets, r.nome as Raca, e.nome as Especie
+from Pets p
+inner join Raca r on p.id_Raca = r.id
+inner join Especie e on r.id_Especie = e.id
+inner join Usuario u on p.id_Usuario = u.id;
+
+------------------------------------------------------------------------------------------------------------
+
+create view alteracao_utilizada as
+select u.nome as Usuario, a.gerada as Data, a.utilizada as Utilizada
+from alteracao_senha a
+inner join Usuario u on a.codigo_Usuario = u.id;
+
+select * from animal_registrado;
+select * from chat;
+select * from adocao;
+select * from doador;
+select * from anuncio;
+select * from alteracao_utilizada;
