@@ -459,13 +459,12 @@ left join Mensagem m on m.enviado_por = u.id;
 -------------------------------------------------------------------------------------------------------
 
 create view adocao as
-select u.nome as Adotante, p.id_Usuario as Doador, r.nome as Raca, a.data_hora as Data
+select u.nome as Adotante, d.nome as Doador, r.nome as Raca, a.data_hora as Data
 from Adocao a
 inner join Usuario u on a.id_Usuario = u.id
 inner Join Pets p on a.id_Pets = p.id
+inner join Usuario d on p.id_Usuario = d.id
 inner join Raca r on p.id_Raca = r.id;
-
-/*Complemento do join acima, ja que não consegui colocar dois nomes de usuario diferentes(Depois verei como resolver esse "problema")*/
 
 create view doador as
 select u.nome as Doador
